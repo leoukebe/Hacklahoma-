@@ -1,70 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Login</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description"
+        content="Marketplace - Buy and sell new and used products, find the best deals in your community">
+    <title>Marketplace - Buy & Sell in Your Community</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="background-animate"></div>
-    <div class="login-container">
-        <div class="login-header">
-            <h2>Welcome Back</h2>
-            <p>Please sign in to your account</p>
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🛍️</div>
+                <span class="logo-text">Marketplace</span>
+            </a>
+
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search products..."
+                    autocomplete="off">
+                <button class="search-clear" id="searchClear">✕</button>
+            </div>
+
+            <div class="header-actions">
+                <button class="icon-button" title="Notifications">
+                    <span>🔔</span>
+                </button>
+                <button class="post-button" title="Create Listing" onclick="window.location.href='create-listing.html'">
+                    <span class="post-icon">➤</span>
+                    <span class="post-text">POST</span>
+                </button>
+                <button class="profile-button" title="Account"></button>
+            </div>
         </div>
-        
-        <form id="loginForm">
-            <div class="input-group">
-                <i class="fas fa-envelope input-icon"></i>
-                <input type="email" id="email" placeholder="Email Address" required>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Products Section -->
+        <section class="products-section">
+            <div class="section-header">
+                <h1 class="section-title">All Listings</h1>
+                <div class="filter-chips">
+                    <button class="chip active" data-sort="newest">Newest</button>
+                    <button class="chip" data-sort="price-low">Price: Low</button>
+                    <button class="chip" data-sort="price-high">Price: High</button>
+                </div>
             </div>
-            
-            <div class="input-group">
-                <i class="fas fa-lock input-icon"></i>
-                <input type="password" id="password" placeholder="Password" required>
-                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically inserted here -->
             </div>
-            
-            <div class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                    Remember me
-                </label>
-                <a href="#" class="forgot-password">Forgot Password?</a>
+
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="emptyState">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No products found</h3>
+                <p>Try searching with different keywords or browse categories</p>
             </div>
-            
-            <button type="submit" class="login-btn">
-                <span>Sign In</span>
-                <i class="fas fa-arrow-right"></i>
-            </button>
-            
-            <div class="divider">
-                <span>or continue with</span>
+        </section>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Product Details</h2>
+                <button class="modal-close" id="modalClose">✕</button>
             </div>
-            
-            <div class="social-login">
-                <button type="button" class="social-btn google">
-                    <i class="fab fa-google"></i>
-                </button>
-                <button type="button" class="social-btn apple">
-                    <i class="fab fa-apple"></i>
-                </button>
-                <button type="button" class="social-btn facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </button>
+            <div class="modal-body">
+                <div>
+                    <img src="" alt="" class="modal-image" id="modalImage">
+                </div>
+                <div class="modal-details">
+                    <div class="detail-price" id="modalPrice">$0</div>
+                    <h2 class="detail-title" id="modalProductTitle">Product Title</h2>
+                    <p class="detail-description" id="modalDescription">
+                        Product description goes here
+                    </p>
+
+                    <div class="detail-info-grid">
+                        <div class="info-item">
+                            <span class="info-icon">📍</span>
+                            <div class="info-content">
+                                <div class="info-label">Location</div>
+                                <div class="info-value" id="modalLocation">Location</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">📦</span>
+                            <div class="info-content">
+                                <div class="info-label">Condition</div>
+                                <div class="info-value" id="modalCondition">Condition</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">🏷️</span>
+                            <div class="info-content">
+                                <div class="info-label">Category</div>
+                                <div class="info-value" id="modalCategory">Category</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="seller-card">
+                        <div class="seller-avatar-large"></div>
+                        <div class="seller-details">
+                            <div class="seller-name-large" id="modalSellerName">Seller Name</div>
+                            <div class="seller-joined">Joined 2 years ago</div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">
+                            <span>💬</span>
+                            Message Seller
+                        </button>
+                        <button class="btn btn-secondary">
+                            <span>❤️</span>
+                            Save Item
+                        </button>
+                    </div>
+                </div>
             </div>
-        </form>
-        
-        <div class="login-footer">
-            <p>Don't have an account? <a href="#">Sign up</a></p>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
