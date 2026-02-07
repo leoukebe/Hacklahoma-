@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import Link from 'next/link';
 import { requestTrade } from "@/app/actions/trade";
 
-export default async function ItemPage({ params }: { params: { id: string } }) {
+export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const item = await prisma.item.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: { owner: true },
     });
 

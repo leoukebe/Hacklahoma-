@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import { updateTradeStatus } from "@/app/actions/trade";
 
 export default async function SwapsPage() {
     const session = await getSession();
@@ -40,15 +40,25 @@ export default async function SwapsPage() {
                                     <div key={trade.id} style={{ padding: '15px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
                                             <span style={{ fontWeight: 'bold', color: '#6366f1' }}>{trade.item.title}</span>
-                                            <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '10px', background: trade.status === 'PENDING' ? '#fbbf24' : '#10b981', color: 'white' }}>{trade.status}</span>
+                                            <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '10px', background: trade.status === 'PENDING' ? '#fbbf24' : (trade.status === 'APPROVED' ? '#10b981' : '#ef4444'), color: 'white' }}>{trade.status}</span>
                                         </div>
                                         <p style={{ fontSize: '14px', color: '#475569' }}>Requested by <strong>{trade.requester.name}</strong></p>
                                         <p style={{ fontSize: '12px', color: '#94a3b8' }}>{new Date(trade.createdAt).toLocaleDateString()}</p>
 
                                         {trade.status === 'PENDING' && (
                                             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                                                <button style={{ flex: 1, padding: '8px', background: '#10b981', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Accept</button>
-                                                <button style={{ flex: 1, padding: '8px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Reject</button>
+                                                <form action={async () => {
+                                                    "use server";
+                                                    await updateTradeStatus(trade.id, "APPROVED");
+                                                }} style={{ flex: 1 }}>
+                                                    <button type="submit" style={{ width: '100%', padding: '8px', background: '#10b981', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Accept</button>
+                                                </form>
+                                                <form action={async () => {
+                                                    "use server";
+                                                    await updateTradeStatus(trade.id, "REJECTED");
+                                                }} style={{ flex: 1 }}>
+                                                    <button type="submit" style={{ width: '100%', padding: '8px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Reject</button>
+                                                </form>
                                             </div>
                                         )}
                                     </div>
@@ -68,7 +78,7 @@ export default async function SwapsPage() {
                                     <div key={trade.id} style={{ padding: '15px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
                                             <span style={{ fontWeight: 'bold', color: '#6366f1' }}>{trade.item.title}</span>
-                                            <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '10px', background: trade.status === 'PENDING' ? '#fbbf24' : '#10b981', color: 'white' }}>{trade.status}</span>
+                                            <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '10px', background: trade.status === 'PENDING' ? '#fbbf24' : (trade.status === 'APPROVED' ? '#10b981' : '#ef4444'), color: 'white' }}>{trade.status}</span>
                                         </div>
                                         <p style={{ fontSize: '14px', color: '#475569' }}>Owner: <strong>{trade.owner.name}</strong></p>
                                         <p style={{ fontSize: '12px', color: '#94a3b8' }}>{new Date(trade.createdAt).toLocaleDateString()}</p>

@@ -4,8 +4,8 @@ import ItemCard from "@/components/ItemCard";
 
 import SearchBar from "@/components/SearchBar";
 
-export default async function Home({ searchParams }: { searchParams: { q?: string } }) {
-  const query = searchParams.q;
+export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const { q: query } = await searchParams;
 
   const items = await prisma.item.findMany({
     where: {
