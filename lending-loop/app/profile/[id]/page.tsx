@@ -1,10 +1,12 @@
+
 import { prisma } from "@/lib/prisma";
 import ItemCard from "@/components/ItemCard";
 import { notFound } from "next/navigation";
 
-export default async function ProfilePage({ params }: { params: { id: string } }) {
+export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const user = await prisma.user.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: { items: true },
     });
 
