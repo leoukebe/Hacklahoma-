@@ -25,6 +25,7 @@ export default async function Navbar() {
 
             <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
                 <Link href="/" style={{ textDecoration: 'none', color: '#1e293b', fontWeight: '500' }}>Browse</Link>
+                <a href="/marketplace/index.html" style={{ textDecoration: 'none', color: '#1e293b', fontWeight: '500' }}>Marketplace</a>
 
                 {session ? (
                     <>

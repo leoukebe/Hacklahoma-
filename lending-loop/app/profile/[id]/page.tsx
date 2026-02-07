@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import ItemCard from "@/components/ItemCard";
 import { notFound } from "next/navigation";
 
+import './profile.css';
+
+
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const user = await prisma.user.findUnique({
@@ -15,45 +18,53 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     }
 
     return (
-        <div style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <div className="login-container" style={{ marginBottom: '40px', maxWidth: '100%' }}>
-                <div className="login-header" style={{ alignItems: 'flex-start', textAlign: 'left', display: 'flex', gap: '20px' }}>
-                    <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '32px' }}>
-                        {user.name?.[0] || 'U'}
-                    </div>
-                    <div>
-                        <h2>{user.name}</h2>
-                        <p style={{ color: '#6366f1', fontWeight: '600' }}>{user.university}</p>
-                        <p style={{ marginTop: '10px' }}>{user.bio || "No bio yet."}</p>
-                    </div>
+        <div className="profile-card">
+            <div className="profile-header">
+                {/* Placeholder image or user's image if available */}
+                <div className="profile-pic">
+                    {user.name?.[0] || 'U'}
                 </div>
-                <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
-                    <div style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px' }}>
-                        <strong>{user.items.length}</strong> Items Listed
+                {/* <img src="profile_placeholder.png" alt="Profile Picture" className="profile-pic" /> */}
+                <div className="profile-info-container">
+                    <div className="profile-names">
+                        <h1 className="full-name">{user.name}</h1>
+                        <p className="username">{user.email}</p>
                     </div>
-                    {/* Placeholder for reputation or trades logic */}
-                    <div style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px' }}>
-                        <strong>0</strong> Trades Completed
-                    </div>
+                    <p className="school-info">{user.university || "University Info"}</p>
                 </div>
             </div>
 
-            <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', color: '#1e293b' }}>Items ({user.items.length})</h3>
+            <div className="rating-section">
+                <div className="stars" aria-label="Rating: 4.8 out of 5">
+                    ★★★★☆
+                </div>
+                <span className="rating-count">4.8 (120 reviews)</span>
+            </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
-                {user.items.map(item => (
-                    <ItemCard
-                        key={item.id}
-                        id={item.id}
-                        title={item.title}
-                        description={item.description}
-                        category={item.category}
-                        imageUrl={item.imageUrl}
-                    />
-                ))}
-                {user.items.length === 0 && (
-                    <p style={{ color: '#64748b' }}>No items listed yet.</p>
-                )}
+            <div className="bio-section">
+                <p className="bio-text">{user.bio || "Passionate developer and student. Open to freelance projects!"}</p>
+            </div>
+
+            <div className="listings-section">
+                <h2 className="section-title">Listings</h2>
+                <div className="listings-container">
+                    {user.items.length > 0 ? (
+                        user.items.map(item => (
+                            <div key={item.id} style={{ background: 'rgba(30, 41, 59, 0.7)', borderRadius: '10px', overflow: 'hidden' }}>
+                                <ItemCard
+                                    id={item.id}
+                                    title={item.title}
+                                    description={item.description}
+                                    category={item.category}
+                                    imageUrl={item.imageUrl}
+                                // ownerName is not needed here as we are on the owner's profile
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <p className="empty-listings-msg">No active listings.</p>
+                    )}
+                </div>
             </div>
         </div>
     );

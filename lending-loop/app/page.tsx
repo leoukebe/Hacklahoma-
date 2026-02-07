@@ -38,6 +38,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
             category={item.category}
             imageUrl={item.imageUrl}
             ownerName={item.owner.name || item.owner.email}
+            ownerId={item.owner.id}
           />
         ))}
         {items.length === 0 && (
