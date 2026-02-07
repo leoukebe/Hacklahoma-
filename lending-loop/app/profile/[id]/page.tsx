@@ -5,8 +5,6 @@ import { notFound } from "next/navigation";
 
 import './profile.css';
 
-export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
