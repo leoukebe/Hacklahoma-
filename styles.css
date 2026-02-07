@@ -434,23 +434,85 @@ body {
 
 .product-title {
     font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-bold);
     color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    line-clamp: 1;
+    overflow: hidden;
+}
+
+.product-description-card {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
     margin-bottom: var(--spacing-sm);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     line-clamp: 2;
     overflow: hidden;
+    line-height: 1.4;
 }
 
 .product-location {
     font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     display: flex;
     align-items: center;
     gap: 4px;
     margin-bottom: var(--spacing-sm);
+}
+
+/* Filter Controls */
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.price-filter {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: var(--bg-secondary);
+    padding: 4px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.price-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+}
+
+.price-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.currency-prefix {
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-bold);
+}
+
+#maxPriceInput {
+    width: 80px;
+    border: none;
+    background: transparent;
+    font-family: var(--font-family);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-blue);
+    outline: none;
+}
+
+#maxPriceInput::placeholder {
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-normal);
 }
 
 .product-meta {
@@ -596,6 +658,44 @@ body {
     color: var(--text-primary);
 }
 
+/* Countdown Timer */
+.countdown-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 107, 53, 0.1);
+    color: var(--warning-orange);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    margin-top: 4px;
+}
+
+.countdown-timer.expired {
+    background: rgba(100, 100, 100, 0.1);
+    color: var(--text-secondary);
+}
+
+.countdown-timer.permanent {
+    background: rgba(0, 132, 255, 0.1);
+    color: var(--primary-blue);
+}
+
+.offer-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
+
 .detail-title {
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-semibold);
@@ -712,6 +812,46 @@ body {
     background: var(--bg-secondary);
     color: var(--primary-blue);
     border: 2px solid var(--primary-blue);
+}
+
+/* Offers List (Seller View) */
+.offers-section {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
+}
+
+.offers-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-md);
+}
+
+.offers-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.offer-item {
+    background: var(--bg-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.offer-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.offer-text {
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    line-height: 1.5;
 }
 
 .btn-secondary:hover {

@@ -41,6 +41,11 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     // Get form data
+    const formDataObj = new FormData(form);
+    const durationHours = parseInt(formDataObj.get('duration'));
+    const expiresAt = Date.now() + (durationHours * 60 * 60 * 1000);
+
+    // Create new listing object
     const formData = {
         id: Date.now(), // Simple ID generation
         title: document.getElementById('title').value,
@@ -48,10 +53,14 @@ form.addEventListener('submit', (e) => {
         description: document.getElementById('description').value,
         location: document.getElementById('location').value,
         condition: document.getElementById('condition').value,
+        duration: durationHours,
+        expiresAt: expiresAt,
         seller: localStorage.getItem('marketplaceUserName') || 'User',
+        sellerEmail: localStorage.getItem('marketplaceUserEmail'),
         time: 'Just now',
-        postedDate: new Date(),
-        image: imagePreview.src || 'product_laptop_1770493792539.png' // Default image
+        postedDate: Date.now(),
+        image: imagePreview.src || 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=1000&auto=format&fit=crop',
+        offers: []
     };
 
     // Get existing listings from localStorage

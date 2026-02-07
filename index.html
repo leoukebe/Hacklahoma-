@@ -49,10 +49,15 @@
         <section class="products-section">
             <div class="section-header">
                 <h1 class="section-title">All Listings</h1>
-                <div class="filter-chips">
+                <div class="filter-controls">
                     <button class="chip active" data-sort="newest">Newest</button>
-                    <button class="chip" data-sort="price-low">Price: Low</button>
-                    <button class="chip" data-sort="price-high">Price: High</button>
+                    <div class="price-filter">
+                        <span class="price-label">Max Price:</span>
+                        <div class="price-input-wrapper">
+                            <span class="currency-prefix">$</span>
+                            <input type="number" id="maxPriceInput" placeholder="Any" min="0" step="10">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -128,6 +133,29 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade Offer Modal -->
+    <div class="modal-overlay" id="offerModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Make a Trade Offer</h2>
+                <button class="modal-close" id="closeOfferModal">✕</button>
+            </div>
+            <div class="modal-body" style="grid-template-columns: 1fr;">
+                <form id="offerForm">
+                    <input type="hidden" id="offerListingId">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="offerDescription" style="display: block; margin-bottom: 8px; font-weight: 600;">What
+                            do you want to trade?</label>
+                        <textarea id="offerDescription" required
+                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: var(--font-family);"
+                            rows="4" placeholder="I offer my Nintendo Switch and $50..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Offer</button>
+                </form>
             </div>
         </div>
     </div>

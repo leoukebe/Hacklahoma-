@@ -90,6 +90,7 @@ function getProductsData() {
 let currentCategory = 'all';
 let currentSort = 'newest';
 let searchQuery = '';
+let maxPrice = Infinity;
 
 // DOM Elements
 const productsGrid = document.getElementById('productsGrid');
@@ -142,6 +143,44 @@ function setupEventListeners() {
         });
     });
 
+    // Max Price input
+    const maxPriceInput = document.getElementById('maxPriceInput');
+    if (maxPriceInput) {
+        maxPriceInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            maxPrice = val ? parseFloat(val) : Infinity;
+            filterProducts();
+        });
+    }
+
+    // Offer Modal handling
+    const offerModal = document.getElementById('offerModal');
+    const closeOfferModal = document.getElementById('closeOfferModal');
+    const offerForm = document.getElementById('offerForm');
+
+    if (closeOfferModal && offerModal) {
+        closeOfferModal.addEventListener('click', () => {
+            offerModal.classList.remove('active');
+        });
+
+        offerModal.addEventListener('click', (e) => {
+            if (e.target === offerModal) offerModal.classList.remove('active');
+        });
+    }
+
+    if (offerForm) {
+        offerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const listingId = parseInt(document.getElementById('offerListingId').value);
+            const description = document.getElementById('offerDescription').value;
+            submitOffer(listingId, description);
+        });
+    }
+
+    // Start countdown timer interval
+    setInterval(updateCountdowns, 60000); // Update every minute
+    updateCountdowns();
+
     // Modal close
     closeModal.addEventListener('click', () => {
         productModal.classList.remove('active');
@@ -167,6 +206,11 @@ function filterProducts() {
             p.title.toLowerCase().includes(searchQuery) ||
             p.description.toLowerCase().includes(searchQuery)
         );
+    }
+
+    // Max Price filter
+    if (maxPrice !== Infinity) {
+        filtered = filtered.filter(p => p.price <= maxPrice);
     }
 
     // Sorting
@@ -209,6 +253,7 @@ function renderProducts(products = getProductsData()) {
             <div class="product-info">
                 <div class="product-price">$${product.price.toLocaleString()}</div>
                 <h3 class="product-title">${product.title}</h3>
+                <p class="product-description-card">${product.description}</p>
                 <div class="product-location">
                     <span>📍</span> ${product.location}
                 </div>
@@ -219,6 +264,9 @@ function renderProducts(products = getProductsData()) {
                     </div>
                     <span class="product-time">${product.time}</span>
                 </div>
+                <!-- Countdown & Offer Badge -->
+                ${renderCountdown(product.expiresAt)}
+                ${product.offers && product.offers.length > 0 ? `<div class="offer-badge">${product.offers.length} Offers</div>` : ''}
             </div>
         `;
 
@@ -248,6 +296,113 @@ function openProductModal(productId) {
 
     productModal.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    // Check if current user is seller
+    const currentUserEmail = localStorage.getItem('marketplaceUserEmail');
+    const isSeller = product.sellerEmail === currentUserEmail || (!product.sellerEmail && product.seller === localStorage.getItem('marketplaceUserName'));
+
+    // Update Action Buttons
+    const actionButtons = document.querySelector('.action-buttons');
+    if (isSeller) {
+        // Show offers if seller
+        renderSellerView(product, actionButtons);
+    } else {
+        // Show "Submit Offer" if not seller
+        actionButtons.innerHTML = `
+            <button class="btn btn-primary" onclick="openOfferModal(${product.id})">
+                <span>🤝</span> Submit Offer
+            </button>
+            <button class="btn btn-secondary">
+                <span>💬</span> Message Seller
+            </button>
+        `;
+    }
+}
+
+// Render Countdown Helper
+function renderCountdown(expiresAt) {
+    if (!expiresAt) return '';
+
+    const now = Date.now();
+    const diff = expiresAt - now;
+
+    if (diff <= 0) {
+        return '<div class="countdown-timer expired"><span>⚠️</span> Expired</div>';
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    const colorClass = hours < 24 ? 'urgent' : '';
+
+    return `<div class="countdown-timer ${colorClass}">
+        <span>⏳</span> ${hours}h ${minutes}m left
+    </div>`;
+}
+
+// Update all countdowns
+function updateCountdowns() {
+    renderProducts(); // Simple re-render for now
+}
+
+// Open Offer Modal
+window.openOfferModal = function (listingId) {
+    document.getElementById('offerListingId').value = listingId;
+    document.getElementById('offerDescription').value = '';
+    document.getElementById('productModal').classList.remove('active');
+    document.getElementById('offerModal').classList.add('active');
+};
+
+// Submit Offer logic
+function submitOffer(listingId, description) {
+    const listings = JSON.parse(localStorage.getItem('marketplaceListings') || '[]');
+    const listingIndex = listings.findIndex(l => l.id === listingId);
+
+    if (listingIndex > -1) {
+        if (!listings[listingIndex].offers) listings[listingIndex].offers = [];
+
+        listings[listingIndex].offers.push({
+            userId: localStorage.getItem('marketplaceUserEmail') || 'Anonymous',
+            userName: localStorage.getItem('marketplaceUserName') || 'Anonymous',
+            description: description,
+            timestamp: Date.now()
+        });
+
+        localStorage.setItem('marketplaceListings', JSON.stringify(listings));
+        alert('Offer submitted successfully! 🤝');
+        document.getElementById('offerModal').classList.remove('active');
+        renderProducts(); // Refresh to show offer count
+    } else {
+        alert('Error: Listing not found.');
+    }
+}
+
+// Render Seller View (Shows Offers context)
+function renderSellerView(product, container) {
+    container.innerHTML = `
+        <div class="offers-section">
+            <h3 class="offers-title">Trade Offers (${product.offers ? product.offers.length : 0})</h3>
+            ${renderOffersList(product.offers)}
+        </div>
+    `;
+}
+
+function renderOffersList(offers) {
+    if (!offers || offers.length === 0) {
+        return '<p class="text-secondary">No offers yet.</p>';
+    }
+
+    return `<div class="offers-list">
+        ${offers.map(offer => `
+            <div class="offer-item">
+                <div class="offer-header">
+                    <span class="offer-user">From: ${offer.userName}</span>
+                    <span class="offer-time">${new Date(offer.timestamp).toLocaleDateString()}</span>
+                </div>
+                <div class="offer-text">${offer.description}</div>
+            </div>
+        `).join('')}
+    </div>`;
 }
 
 // Get Category Display Name
