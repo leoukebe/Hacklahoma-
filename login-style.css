@@ -1,0 +1,232 @@
+/* Login Page Styles */
+:root {
+    --primary: #0084ff;
+    --primary-dark: #0073e6;
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --text-main: #1c1e21;
+    --text-muted: #65676b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.login-bg {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: var(--bg-gradient);
+    z-index: -1;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.login-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 450px;
+    z-index: 1;
+}
+
+.login-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.login-header h1 {
+    color: var(--text-main);
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: var(--text-muted);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i:first-child {
+    position: absolute;
+    left: 15px;
+    color: var(--text-muted);
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #dddfe2;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.2);
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.forgot-password {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s;
+}
+
+.login-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 132, 255, 0.4);
+}
+
+.login-divider {
+    text-align: center;
+    margin: 25px 0;
+    position: relative;
+}
+
+.login-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #dddfe2;
+    z-index: 0;
+}
+
+.login-divider span {
+    background: #fdfdfd;
+    padding: 0 15px;
+    color: var(--text-muted);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.social-login {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.social-btn {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #dddfe2;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s;
+}
+
+.social-btn:hover {
+    background: #f0f2f5;
+    transform: translateY(-2px);
+}
+
+.login-footer {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.login-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
