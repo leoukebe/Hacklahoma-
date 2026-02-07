@@ -382,12 +382,12 @@ function renderSellerView(product, container) {
     container.innerHTML = `
         <div class="offers-section">
             <h3 class="offers-title">Trade Offers (${product.offers ? product.offers.length : 0})</h3>
-            ${renderOffersList(product.offers)}
+            ${renderOffersList(product.offers, product.id)}
         </div>
     `;
 }
 
-function renderOffersList(offers) {
+function renderOffersList(offers, listingId) {
     if (!offers || offers.length === 0) {
         return '<p class="text-secondary">No offers yet.</p>';
     }
@@ -400,6 +400,9 @@ function renderOffersList(offers) {
                     <span class="offer-time">${new Date(offer.timestamp).toLocaleDateString()}</span>
                 </div>
                 <div class="offer-text">${offer.description}</div>
+                <button class="btn btn-sm btn-primary" onclick="acceptOffer(${listingId}, ${offers.indexOf(offer)})" style="margin-top: 8px; width: 100%;">
+                    <span>✅</span> Accept Offer
+                </button>
             </div>
         `).join('')}
     </div>`;
@@ -439,4 +442,77 @@ function updateUserProfile() {
 }
 
 // Start App
+// Accept Offer
+window.acceptOffer = function (listingId, offerIndex) {
+    if (!confirm('Are you sure you want to accept this offer? The item will be marked as sold.')) return;
+
+    const listings = JSON.parse(localStorage.getItem('marketplaceListings') || '[]');
+    const listingIndex = listings.findIndex(l => l.id === listingId);
+
+    if (listingIndex > -1) {
+        const listing = listings[listingIndex];
+        const offer = listing.offers[offerIndex];
+
+        // Create Trade Record
+        const trade = {
+            id: Date.now(),
+            itemTitle: listing.title,
+            itemImage: listing.image,
+            price: listing.price,
+            buyer: offer.userName,
+            buyerEmail: offer.userId,
+            seller: listing.seller,
+            sellerEmail: listing.sellerEmail,
+            acceptedDate: new Date().toLocaleDateString(),
+            acceptedTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            timestamp: Date.now()
+        };
+
+        // Save to History
+        const history = JSON.parse(localStorage.getItem('marketplaceHistory') || '[]');
+        history.unshift(trade);
+        localStorage.setItem('marketplaceHistory', JSON.stringify(history));
+
+        // Remove Listing (Mark as Sold)
+        listings.splice(listingIndex, 1);
+        localStorage.setItem('marketplaceListings', JSON.stringify(listings));
+
+        alert('Offer accepted! Item moved to Trade History.');
+        document.getElementById('productModal').classList.remove('active');
+        renderProducts();
+    }
+};
+
+// Open History Modal
+window.openHistoryModal = function () {
+    const modal = document.getElementById('historyModal');
+    const list = document.getElementById('historyList');
+    const history = JSON.parse(localStorage.getItem('marketplaceHistory') || '[]');
+
+    if (history.length === 0) {
+        list.innerHTML = '<p class="text-secondary" style="text-align: center; padding: 20px;">No trade history yet.</p>';
+    } else {
+        list.innerHTML = history.map(trade => `
+            <div class="offer-item" style="display: flex; gap: 12px;">
+                <img src="${trade.itemImage}" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover;">
+                <div style="flex: 1;">
+                    <h4 style="font-weight: 600; margin-bottom: 4px;">${trade.itemTitle}</h4>
+                    <p class="text-secondary" style="font-size: 13px;">Sold to <strong>${trade.buyer}</strong></p>
+                    <p class="text-secondary" style="font-size: 12px; margin-top: 4px;">
+                        ${trade.acceptedDate} at ${trade.acceptedTime}
+                    </p>
+                </div>
+                <div style="font-weight: 700; color: var(--success-green);">$${trade.price}</div>
+            </div>
+        `).join('');
+    }
+
+    modal.classList.add('active');
+};
+
+// Close History Modal
+document.getElementById('closeHistoryModal')?.addEventListener('click', () => {
+    document.getElementById('historyModal').classList.remove('active');
+});
+
 init();

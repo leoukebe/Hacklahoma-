@@ -38,6 +38,9 @@
                     <span class="post-icon">➤</span>
                     <span class="post-text">POST</span>
                 </button>
+                <button class="icon-button" title="Trade History" onclick="openHistoryModal()">
+                    <span>📜</span>
+                </button>
                 <button class="profile-button" title="Account"></button>
             </div>
         </div>
@@ -156,6 +159,21 @@
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Offer</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade History Modal -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Trade History</h2>
+                <button class="modal-close" id="closeHistoryModal">✕</button>
+            </div>
+            <div class="modal-body" style="grid-template-columns: 1fr;">
+                <div id="historyList" style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- History items injected here -->
+                </div>
             </div>
         </div>
     </div>
