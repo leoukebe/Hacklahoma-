@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String   // Simple storage for MVP
+  bio       String?
+  university String?
+  
+  items     Item[]
+  requestedTrades Trade[] @relation("Requester")
+  receivedTrades  Trade[] @relation("Owner")
+}
+
+model Item {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String
+  imageUrl    String?
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  trades      Trade[]
+  createdAt   DateTime @default(now())
+}
+
+model Trade {
+  id          String   @id @default(cuid())
+  requesterId String
+  requester   User     @relation("Requester", fields: [requesterId], references: [id])
+  ownerId     String
+  owner       User     @relation("Owner", fields: [ownerId], references: [id])
+  itemId      String
+  item        Item     @relation(fields: [itemId], references: [id])
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED, RETURNED
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+}
