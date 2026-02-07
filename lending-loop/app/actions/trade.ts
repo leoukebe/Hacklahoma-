@@ -34,3 +34,37 @@ export async function requestTrade(itemId: string, ownerId: string) {
     revalidatePath(`/item/${itemId}`);
     redirect("/swaps");
 }
+
+export async function updateTradeStatus(tradeId: string, newStatus: "APPROVED" | "REJECTED") {
+    const session = await getSession();
+    if (!session || !session.user) {
+        redirect("/login");
+    }
+
+    const userId = session.user.id;
+
+    // Verify the user is the owner of the trade (i.e., the one receiving the request)
+    const trade = await prisma.trade.findUnique({
+        where: { id: tradeId },
+    });
+
+    if (!trade) {
+        return { error: "Trade not found." };
+    }
+
+    if (trade.ownerId !== userId) {
+        return { error: "Unauthorized." };
+    }
+
+    try {
+        await prisma.trade.update({
+            where: { id: tradeId },
+            data: { status: newStatus },
+        });
+    } catch (error) {
+        console.error("Failed to update trade:", error);
+        return { error: "Failed to update trade status." };
+    }
+
+    revalidatePath("/swaps");
+}
