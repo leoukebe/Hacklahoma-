@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Marketplace - Buy and sell new and used products, find the best deals in your community">
+    <title>Marketplace - Buy & Sell in Your Community</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🛍️</div>
+                <span class="logo-text">Marketplace</span>
+            </a>
+
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
+                <button class="search-clear" id="searchClear">✕</button>
+            </div>
+
+            <div class="header-actions">
+                <button class="icon-button" title="Notifications">
+                    <span>🔔</span>
+                </button>
+                <button class="post-button" title="Create Listing" onclick="window.location.href='create-listing.html'">
+                    <span class="post-icon">➤</span>
+                    <span class="post-text">POST</span>
+                </button>
+                <button class="profile-button" title="Account"></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Products Section -->
+        <section class="products-section">
+            <div class="section-header">
+                <h1 class="section-title">All Listings</h1>
+                <div class="filter-controls">
+                    <button class="chip active" data-sort="newest">Newest</button>
+                    <div class="price-filter">
+                        <span class="price-label">Max Price:</span>
+                        <div class="price-input-wrapper">
+                            <span class="currency-prefix">$</span>
+                            <input type="number" id="maxPriceInput" placeholder="Any" min="0" step="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically injected here -->
+                <div class="loading">Loading products...</div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No products found</h3>
+                <p>Try adjusting your search or filters to find what you're looking for.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Product Details</h2>
+                <button class="modal-close" id="closeModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img src="" alt="" class="modal-image" id="modalImage">
+                </div>
+                <div class="modal-details">
+                    <div class="detail-price" id="modalPrice"></div>
+                    <h1 class="detail-title" id="modalTitle"></h1>
+                    <p class="detail-description" id="modalDescription"></p>
+
+                    <div class="detail-info-grid">
+                        <div class="info-item">
+                            <span class="info-icon">📍</span>
+                            <div class="info-content">
+                                <span class="info-label">Location</span>
+                                <div class="info-value" id="modalLocation"></div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">📦</span>
+                            <div class="info-content">
+                                <span class="info-label">Condition</span>
+                                <div class="info-value" id="modalCondition"></div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">🏷️</span>
+                            <div class="info-content">
+                                <span class="info-label">Category</span>
+                                <div class="info-value" id="modalCategory"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="seller-card">
+                        <div class="seller-avatar-large"></div>
+                        <div class="seller-details">
+                            <div class="seller-name-large" id="modalSeller"></div>
+                            <div class="seller-joined">Joined 2 years ago</div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">
+                            <span>💬</span> Message Seller
+                        </button>
+                        <button class="btn btn-secondary">
+                            <span>💾</span> Save Item
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade Offer Modal -->
+    <div class="modal-overlay" id="offerModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Make a Trade Offer</h2>
+                <button class="modal-close" id="closeOfferModal">✕</button>
+            </div>
+            <div class="modal-body" style="grid-template-columns: 1fr;">
+                <form id="offerForm">
+                    <input type="hidden" id="offerListingId">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="offerDescription" style="display: block; margin-bottom: 8px; font-weight: 600;">What
+                            do you want to trade?</label>
+                        <textarea id="offerDescription" required
+                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: var(--font-family);"
+                            rows="4" placeholder="I offer my Nintendo Switch and $50..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Offer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>
