@@ -1,6 +1,7 @@
 'use client'
 
-import { useFormState, useFormStatus } from 'react-dom'
+import { useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { login } from '../actions/auth'
 
 function SubmitButton() {
@@ -20,7 +21,7 @@ function SubmitButton() {
 }
 
 export default function LoginForm() {
-    const [state, formAction] = useFormState(login, null)
+    const [state, formAction] = useActionState(login, null)
 
     return (
         <div className="login-container">
